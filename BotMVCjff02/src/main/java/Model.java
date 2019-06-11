@@ -62,13 +62,17 @@ public class Model implements Subject {
 		String filmesData = null;
 		for(Filme filme: allFilmes){
 			String senha = "jff"; //Palavra 'todos' ao invés de 'filme' no bot.
-			if(filme.getName().equalsIgnoreCase(update.message().text())){ 
+			
+			if(filme.getName().toLowerCase().contains(update.message().text().toLowerCase())){ 
 				filmesData = "Filme: " + filme.getName();
 				filmesData += "\nHorário: " + filme.getHorario();
 				filmesData += "\nTrailer: " + filme.getTrailer();
 				filmesData += "\nSinopse: " + filme.getSinopse();
 				filmesData += "\nEscreva Filme para procurar outro filme.\n";
 				System.out.println("\nFilme pesquisado\n" + filmesData);
+				
+			this.notifyObservers(update.message().chat().id(), filmesData);
+								
 			}
 			if(senha.equals(update.message().text())){
 				for (Filme filme1 : allFilmes) {
@@ -85,10 +89,9 @@ public class Model implements Subject {
 			}
 		}
 		
-		if(filmesData != null){
-			this.notifyObservers(update.message().chat().id(), filmesData);
-		} else {
+		if(filmesData == null){
 			this.notifyObservers(update.message().chat().id(), "Filme not found\nEscreva filme");
+			System.out.println("\nFilme pesquisado\n" + update.message().text() + "\nFilme not found");
 		}
 		
 	}
